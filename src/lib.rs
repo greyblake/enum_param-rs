@@ -1,3 +1,7 @@
+#![feature(associated_type_defaults)]
+
+extern crate rand;
+
 mod traits;
 pub use self::traits::*;
 

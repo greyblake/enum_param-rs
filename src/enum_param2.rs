@@ -21,6 +21,7 @@ impl<P1, P2> AsEnumParam for EnumParam2<P1, P2>
           <<P2 as AsEnumParam>::Iter as Iterator>::Item: Clone
     {
     type Iter = EnumParam2Iter<P1::Iter, P2::Iter>;
+    type Item = (<P1 as AsEnumParam>::Item, <P2 as AsEnumParam>::Item);
 
     fn iter(&self) -> Self::Iter {
         let mut i1 = self.ep1.iter();
@@ -38,6 +39,10 @@ impl<P1, P2> AsEnumParam for EnumParam2<P1, P2>
 
     fn len(&self) -> usize {
         self.ep1.len() * self.ep2.len()
+    }
+
+    fn rand(&self) -> Self::Item {
+        (self.ep1.rand(), self.ep2.rand())
     }
 }
 

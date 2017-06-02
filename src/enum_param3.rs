@@ -25,6 +25,7 @@ impl<P1, P2, P3> AsEnumParam for EnumParam3<P1, P2, P3>
           <<P3 as AsEnumParam>::Iter as Iterator>::Item: Clone
     {
     type Iter = EnumParam3Iter<P1::Iter, P2::Iter, P3::Iter>;
+    type Item = (<P1 as AsEnumParam>::Item, <P2 as AsEnumParam>::Item, <P3 as AsEnumParam>::Item);
 
     fn iter(&self) -> Self::Iter {
         let mut i1 = self.ep1.iter();
@@ -46,6 +47,10 @@ impl<P1, P2, P3> AsEnumParam for EnumParam3<P1, P2, P3>
 
     fn len(&self) -> usize {
         self.ep1.len() * self.ep2.len() * self.ep3.len()
+    }
+
+    fn rand(&self) -> Self::Item {
+        (self.ep1.rand(), self.ep2.rand(), self.ep3.rand())
     }
 }
 
@@ -149,5 +154,15 @@ mod tests {
 
         let abc = EnumParam3::new(a, b, c);
         assert_eq!(abc.len(), 18);
+    }
+
+    #[test]
+    fn test_rand() {
+        let a = EnumParam::new(vec![1, 2, 3, 4]);
+        let b = EnumParam::new(vec![4.4, 8.8, 9.0]);
+        let c = EnumParam::new(vec!['x', 'y', 'z']);
+        let abc = EnumParam3::new(a, b, c);
+
+        println!("{:?}", abc.rand());
     }
 }

@@ -1,4 +1,5 @@
 use super::*;
+use rand::Rng;
 
 #[derive(Clone,Debug)]
 pub struct EnumParam<T> {
@@ -14,6 +15,7 @@ impl<T> EnumParam<T> {
 
 impl<T: Clone> AsEnumParam for EnumParam<T> {
     type Iter = EnumParamIter<T>;
+    type Item = T;
 
     fn iter(&self) -> Self::Iter {
         Self::Iter {
@@ -25,6 +27,10 @@ impl<T: Clone> AsEnumParam for EnumParam<T> {
 
     fn len(&self) -> usize {
         self.items.len()
+    }
+
+    fn rand(&self) -> Self::Item {
+        (*rand::thread_rng().choose(&self.items).unwrap()).clone()
     }
 }
 
@@ -79,11 +85,18 @@ mod tests {
         assert_eq!(iter.next(), None);
     }
 
+    #[test]
     fn test_len() {
         let param = EnumParam::new(vec![1, 2, 3]);
         assert_eq!(param.len(), 3);
 
         let param = EnumParam::new(vec!['a', 'b', 'c', 'd']);
         assert_eq!(param.len(), 4);
+    }
+
+    #[test]
+    fn test_rand() {
+        let param = EnumParam::new(vec![1, 2, 3]);
+        param.rand();
     }
 }
